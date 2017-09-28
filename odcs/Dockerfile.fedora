@@ -21,8 +21,6 @@ RUN dnf -y --refresh install \
         gettext \
         git \
         isomd5sum \
-        kobo \
-        kobo-rpmlib \
         koji \
         libselinux-python \
         python-kickstart \
@@ -59,6 +57,9 @@ RUN dnf -y --refresh install \
 
 # Not packaged for python2
 RUN pip install pyldap
+
+RUN git clone https://github.com/release-engineering/kobo.git /tmp/kobo
+RUN cd /tmp/kobo && python setup.py install
 
 RUN git clone https://pagure.io/pungi.git /tmp/pungi
 RUN cd /tmp/pungi && python setup.py install
