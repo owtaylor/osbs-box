@@ -23,7 +23,7 @@ RUN chmod +x /usr/local/bin/* && \
     mkdir -p /mnt/koji/{packages,repos,work,scratch} && \
     chown apache.apache /mnt/koji/*
 
-RUN git clone -b flatpak-support https://github.com/owtaylor/koji-containerbuild.git /tmp/koji-containerbuild && \
+RUN git clone -b master https://github.com/release-engineering/koji-containerbuild.git /tmp/koji-containerbuild && \
     cd /tmp/koji-containerbuild && \
     install -p -m 0644 koji_containerbuild/plugins/hub_containerbuild.py  /usr/lib/koji-hub-plugins/
 
