@@ -34,6 +34,7 @@ RUN dnf -y --refresh install \
         syslinux \
         yum-utils \
     m2crypto \
+	python2-defusedxml \
         python2-funcsigs \
         python-httplib2 \
         python-m2ext \
