@@ -17,16 +17,18 @@ ADD etc/ /etc/
 ADD bin/ /usr/local/bin/
 RUN chmod +x /usr/local/bin/*
 
-RUN echo 44
+RUN dnf -y --enablerepo=updates-testing install osbs-client koji-containerbuild-builder && dnf clean all
+RUN sed -i "s@if self.spec.imagestream_name is None or self.spec.imagestream_url is None@if self.spec.imagestream_name.value is None or self.spec.imagestream_url.value is None@" /usr/lib/python3.6/site-packages/osbs/build/build_request.py
+RUN sed -i "s@if self.spec.imagestream_name is None or self.spec.imagestream_url is None@if self.spec.imagestream_name.value is None or self.spec.imagestream_url.value is None@" /usr/lib/python2.7/site-packages/osbs/build/build_request.py
 
-RUN git clone -b flatpak-support https://github.com/owtaylor/osbs-client.git /tmp/osbs-client && \
-    cd /tmp/osbs-client && \
-    python2 setup.py install && \
-    install -D -t /usr/share/osbs inputs/*.json
-
-RUN git clone -b flatpak-support https://github.com/owtaylor/koji-containerbuild.git /tmp/koji-containerbuild && \
-    cd /tmp/koji-containerbuild && \
-    install -D -p -m 0644 koji_containerbuild/plugins/builder_containerbuild.py /usr/lib/koji-builder-plugins/
+# RUN git clone -b flatpak-support https://github.com/owtaylor/osbs-client.git /tmp/osbs-client && \
+#     cd /tmp/osbs-client && \
+#     python2 setup.py install && \
+#     install -D -t /usr/share/osbs inputs/*.json
+#
+# RUN git clone -b flatpak-support https://github.com/owtaylor/koji-containerbuild.git /tmp/koji-containerbuild && \
+#     cd /tmp/koji-containerbuild && \
+#     install -D -p -m 0644 koji_containerbuild/plugins/builder_containerbuild.py /usr/lib/koji-builder-plugins/
 
 ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
 CMD ["/usr/sbin/init"]

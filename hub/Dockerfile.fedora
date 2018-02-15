@@ -24,10 +24,11 @@ RUN chmod +x /usr/local/bin/* && \
     mkdir -p /mnt/koji/{packages,repos,work,scratch} && \
     chown apache.apache /mnt/koji/*
 
-RUN git clone -b master https://github.com/release-engineering/koji-containerbuild.git /tmp/koji-containerbuild && \
-    cd /tmp/koji-containerbuild && \
-    install -p -m 0644 koji_containerbuild/plugins/hub_containerbuild.py  /usr/lib/koji-hub-plugins/
+RUN dnf -y --enablerepo=updates-testing install koji-containerbuild-hub && dnf clean all
 
+#RUN git clone -b master https://github.com/release-engineering/koji-containerbuild.git /tmp/koji-containerbuild && \
+#    cd /tmp/koji-containerbuild && \
+#    install -p -m 0644 koji_containerbuild/plugins/hub_containerbuild.py  /usr/lib/koji-hub-plugins/
 
 ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
 CMD ["httpd", "-D", "FOREGROUND"]

@@ -21,16 +21,18 @@ ADD configs/ /configs
 
 RUN chmod +x /usr/local/bin/*
 
-RUN git clone -b master https://github.com/projectatomic/osbs-client.git /tmp/osbs-client && \
-    cd /tmp/osbs-client && \
-    python2 setup.py install && \
-    python3 setup.py install && \
-    install -D -t /usr/share/osbs inputs/*.json
+RUN dnf -y --enablerepo=updates-testing install osbs-client koji-containerbuild-cli && dnf clean all
 
-RUN git clone -b master https://github.com/release-engineering/koji-containerbuild.git /tmp/koji-containerbuild && \
-    cd /tmp/koji-containerbuild && \
-    pip install --no-deps . && \
-    install -p -m 0755 cli/koji-containerbuild /usr/bin/koji-containerbuild
+#RUN git clone -b master https://github.com/projectatomic/osbs-client.git /tmp/osbs-client && \
+#    cd /tmp/osbs-client && \
+#    python2 setup.py install && \
+#    python3 setup.py install && \
+#    install -D -t /usr/share/osbs inputs/*.json
+#
+#RUN git clone -b master https://github.com/release-engineering/koji-containerbuild.git /tmp/koji-containerbuild && \
+#    cd /tmp/koji-containerbuild && \
+#    pip install --no-deps . && \
+#    install -p -m 0755 cli/koji-containerbuild /usr/bin/koji-containerbuild
 
 ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
 CMD ["sleep", "infinity"]
