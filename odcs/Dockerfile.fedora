@@ -26,6 +26,7 @@ RUN dnf -y --refresh install \
         python-kickstart \
         python2-jsonschema \
         python-enum34 \
+        python2-libcomps \
         python-lockfile \
         python2-lxml \
         python2-modulemd \
@@ -34,6 +35,7 @@ RUN dnf -y --refresh install \
         syslinux \
         yum-utils \
     m2crypto \
+        hardlink \
 	python2-defusedxml \
         python2-funcsigs \
         python-httplib2 \
@@ -62,12 +64,15 @@ RUN pip install pyldap
 RUN git clone https://github.com/release-engineering/kobo.git /tmp/kobo
 RUN cd /tmp/kobo && python setup.py install
 
-RUN git clone https://pagure.io/pungi.git /tmp/pungi
+RUN git clone -b owtaylor-work https://pagure.io/forks/otaylor/pungi.git /tmp/pungi
 RUN cd /tmp/pungi && python setup.py install
 
-RUN git clone https://pagure.io/odcs.git /tmp/odcs
+RUN git clone -b owtaylor-work https://pagure.io/forks/otaylor/odcs.git /tmp/odcs
 RUN cd /tmp/odcs && python setup.py install
 RUN mkdir -p /etc/odcs
+# Workaround because the DevConfiguration/TestConfiguration try to create this
+# when imported, even when we're not using them.
+RUN mkdir -p /etc/odcs/test_composes
 RUN cp /tmp/odcs/server/conf/config.py /etc/odcs
 
 ADD config_docker.py /etc/odcs/config_docker.py
