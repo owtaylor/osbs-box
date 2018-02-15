@@ -14,6 +14,16 @@ import time
 
 def verify_digest(rpm, relpath):
     try:
+        output = subprocess.check_output(['rpm', '-qp', '--queryformat=%{SIGMD5}', relpath],
+                                         stderr=subprocess.STDOUT,
+                                         universal_newlines=True)
+    except subprocess.CalledProcessError:
+        return False
+
+    if output.strip() != rpm['payloadhash']:
+        return False
+
+    try:
         output = subprocess.check_output(['rpm', '-Kv', relpath],
                                          stderr=subprocess.STDOUT,
                                          universal_newlines=True)
@@ -22,10 +32,10 @@ def verify_digest(rpm, relpath):
 
     md5_digest = None
     for line in output.split('\n'):
-        m = re.search(r'MD5 digest.*\(([0-9a-f]+)\)', line)
+        m = re.search(r'MD5 digest:\s*OK', line)
         if m:
-            md5_digest = m.group(1)
-    return md5_digest == rpm['payloadhash']
+            return True
+    return False
 
 class Builder(object):
     def __init__(self, tag, config, git_url, git_branch, workdir):

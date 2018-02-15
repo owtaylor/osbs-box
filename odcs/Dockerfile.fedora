@@ -21,11 +21,11 @@ RUN dnf -y --refresh install \
         gettext \
         git \
         isomd5sum \
-        koji \
         libselinux-python \
         python-kickstart \
         python2-jsonschema \
         python-enum34 \
+        python2-koji \
         python2-libcomps \
         python-lockfile \
         python2-lxml \
